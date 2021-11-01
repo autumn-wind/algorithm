@@ -1,3 +1,7 @@
+#include<vector>
+#include<string>
+#include<set>
+
 #define Comparable int
 
 struct Selection {
@@ -12,4 +16,8 @@ struct Insertion {
 struct Sort_Compare {
     static double time(std::string&, std::vector<Comparable>&);
     static double time_random_input(std::string&, int, int);
+};
+
+struct Sort_Registration {
+    static const std::set<std::string>& algos(); 
 };

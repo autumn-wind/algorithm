@@ -1,9 +1,15 @@
-#include<vector>
-#include<string>
 #include<chrono>
+
 #include<stdlib.h>
 #include<time.h>
+
 #include"sort_algo.h"
+
+const std::set<std::string>&
+Sort_Registration::algos() {
+    static std::set<std::string> sort_algorithms {"Selection", "Insertion"};
+    return sort_algorithms;
+}
 
 void 
 Selection::sort(std::vector<Comparable> &a) {
