@@ -1,13 +1,17 @@
 #include<chrono>
+#include<algorithm>
+#include<iostream>
 
-#include<stdlib.h>
 #include<time.h>
 
 #include"sort_algo.h"
 
-const std::set<std::string>&
+const String_Function_Map&
 Sort_Registration::algos() {
-    static std::set<std::string> sort_algorithms {"Selection", "Insertion"};
+    static String_Function_Map sort_algorithms {
+	    {"Selection", Selection::sort},
+	    {"Insertion", Insertion::sort}, 
+	    {"STL", STL::sort}};
     return sort_algorithms;
 }
 
@@ -46,27 +50,56 @@ Insertion::sort2(std::vector<Comparable> &a) {
     }
 }
 
+void STL::sort(std::vector<Comparable> &a) {
+    std::sort(a.begin(), a.end());
+}
+
 double
-Sort_Compare::time(std::string &alg, std::vector<Comparable> &a) {
+Sort_Compare::time(const Sort_Function &func, std::vector<Comparable> &a) {
     auto start = std::chrono::steady_clock::now();
-    if (alg.compare("Selection") == 0)
-	Selection::sort(a);
-    else if (alg.compare("Insertion") == 0)
-	Insertion::sort(a);
+    func(a);
     auto end = std::chrono::steady_clock::now();
     std::chrono::duration<double> elapsed_seconds = end-start;
     return elapsed_seconds.count();
 }
 
 double
-Sort_Compare::time_random_input(std::string &alg, int N, int T) {
+Sort_Compare::time_random_input(const Sort_Function &func, int array_len, int loop_times) {
+    std::vector<Comparable> a(array_len);
     double total = 0.0;
-    std::vector<Comparable> a(N);
+
     ::srandom(::time(NULL));
-    for (int t = 0; t < T; t++) {
-	for (int i = 0; i < N; i++)
+
+    for (int t = 0; t < loop_times; t++) {
+	for (int i = 0; i < array_len; i++)
 	    a[i] = ::random();
-	total += time(alg, a);
+	total += time(func, a);
     }
+
     return total;
 }
+
+#define TEST_ARRAY_LENGTH 10
+void
+Sort_Compare::test_sort(const std::string &alg, const Sort_Function &func) {
+    std::cout << "<<<Test " << alg << " sort algorithm>>>" << std::endl;
+
+    std::vector<Comparable> a(TEST_ARRAY_LENGTH);
+    ::srandom(::time(NULL));
+
+    std::cout << "Initial array:" << std::endl;
+    for (int i = 0; i < TEST_ARRAY_LENGTH; i++)
+    {
+	a[i] = ::random() % 100;
+	std::cout << a[i] << ' ';
+    }
+    std::cout << std::endl;
+
+    func(a);
+
+    std::cout << "Sorted array:" << std::endl;
+    for (auto &n : a)
+	std::cout << n << ' ';
+    std::cout << std::endl;
+}
+#undef TEST_ARRAY_LENGTH
