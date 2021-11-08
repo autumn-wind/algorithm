@@ -2,6 +2,7 @@
 
 #include<stdio.h>
 #include<stdlib.h>
+
 #include"sort_algo.h"
 
 #define DEFAULT_ARRAY_LENGTH 1000
@@ -21,14 +22,14 @@ int main(int argn, char *argv[]) {
 	print_usage_and_exit();
     }
 
-    std::string alg1 = argv[1], alg2 = argv[2];
-    auto &algo_list = Sort_Registration::algos();
+    const std::string alg1 = argv[1], alg2 = argv[2];
+    const auto &algo_list = Sort_Registration::algos();
     auto it1 = algo_list.find(alg1);
     auto it2 = algo_list.find(alg2);
 
     // test whether algorithm works well
     if (alg1.compare("test") == 0 && it2 != algo_list.end() && argn == 3) {
-	Sort_Compare::test_sort(alg2, it2->second);
+	Sort_Compare::test_sort_algo(alg2, it2->second);
     }
     // compare two algorithms
     else if (it1 != algo_list.end() && it2 != algo_list.end()) {
@@ -49,11 +50,11 @@ int main(int argn, char *argv[]) {
 		print_usage_and_exit();
 	}
 
-	double t1 = Sort_Compare::time_random_input(it1->second, array_len, loop_times);
-	double t2 = Sort_Compare::time_random_input(it2->second, array_len, loop_times);
+	double t1 = Sort_Compare::sort_and_time_random_input(it1->second, array_len, loop_times);
+	double t2 = Sort_Compare::sort_and_time_random_input(it2->second, array_len, loop_times);
 
 	printf("For %d random Ints of %d iteration\n\
-		%s (takes %f seconds) is %.1f times faster than %s (takes %f seconds)\n", 
+		%s (takes %f seconds) is %.3f times faster than %s (takes %f seconds)\n", 
 		array_len, loop_times, alg1.c_str(), t1, t2/t1, alg2.c_str(), t2);
     }
     else

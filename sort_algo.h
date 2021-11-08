@@ -3,30 +3,30 @@
 #include<map>
 #include<functional>
 
-#define Comparable int
-
-typedef std::function<void(std::vector<Comparable>&)> Sort_Function;
-typedef std::map<std::string, Sort_Function> String_Function_Map;
+typedef int Comparable;
+typedef std::vector<Comparable> Comparable_Array;
+typedef std::function<void(Comparable_Array&)> Sort_Function;
+typedef std::map<std::string, Sort_Function> Name_Sort_Function_Map;
 
 struct Selection {
-    static void sort(std::vector<Comparable>&);
+    static void sort(Comparable_Array&);
 };
 
 struct Insertion {
-    static void sort(std::vector<Comparable>&); 
-    static void sort2(std::vector<Comparable>&); 
+    static void sort(Comparable_Array&); 
+    static void sort2(Comparable_Array&); 
 };
 
 struct STL {
-    static void sort(std::vector<Comparable>&);
+    static void sort(Comparable_Array&);
 };
 
 struct Sort_Compare {
-    static double time(const Sort_Function&, std::vector<Comparable>&);
-    static double time_random_input(const Sort_Function&, int, int);
-    static void test_sort(const std::string&, const Sort_Function&);
+    static double sort_and_time(const Sort_Function&, Comparable_Array&);
+    static double sort_and_time_random_input(const Sort_Function&, int, int);
+    static void test_sort_algo(const std::string&, const Sort_Function&);
 };
 
 struct Sort_Registration {
-    static const String_Function_Map& algos(); 
+    static const Name_Sort_Function_Map& algos(); 
 };
