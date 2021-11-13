@@ -9,11 +9,16 @@
 const Name_Sort_Function_Map&
 Sort_Registration::algos() {
     static Name_Sort_Function_Map sort_algorithms {
+	    {"STL", STL::sort},
 	    {"Selection", Selection::sort},
 	    {"Insertion", Insertion::sort}, 
 	    {"Insertion2", Insertion::sort2}, 
-	    {"STL", STL::sort}};
+	    {"Shell", Shell::sort}};
     return sort_algorithms;
+}
+
+void STL::sort(Comparable_Array &a) {
+    std::sort(a.begin(), a.end());
 }
 
 void 
@@ -51,8 +56,24 @@ Insertion::sort2(Comparable_Array &a) {
     }
 }
 
-void STL::sort(Comparable_Array &a) {
-    std::sort(a.begin(), a.end());
+void
+Shell::sort(Comparable_Array &a) {
+    int h = 1;
+    do {
+	int n = h * 3;
+	if (n < a.size())
+	    h = n;
+	else
+	    break;
+    } while(1);
+
+    while (h > 0) {
+	for (int i = h; i < a.size(); i++) {
+	    for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
+		std::swap(a[j], a[j - h]);
+	}
+	h /= 3;
+    }
 }
 
 double

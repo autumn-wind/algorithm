@@ -8,6 +8,10 @@ typedef std::vector<Comparable> Comparable_Array;
 typedef std::function<void(Comparable_Array&)> Sort_Function;
 typedef std::map<std::string, Sort_Function> Name_Sort_Function_Map;
 
+struct STL {
+    static void sort(Comparable_Array&);
+};
+
 struct Selection {
     static void sort(Comparable_Array&);
 };
@@ -17,7 +21,7 @@ struct Insertion {
     static void sort2(Comparable_Array&); 
 };
 
-struct STL {
+struct Shell {
     static void sort(Comparable_Array&);
 };
 
