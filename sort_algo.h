@@ -23,6 +23,7 @@ struct Insertion {
 
 struct Shell {
     static void sort(Comparable_Array&);
+    static void sort2(Comparable_Array&);
 };
 
 struct Sort_Compare {

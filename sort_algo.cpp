@@ -1,6 +1,7 @@
 #include<chrono>
 #include<algorithm>
 #include<iostream>
+#include<vector>
 
 #include<time.h>
 
@@ -13,7 +14,8 @@ Sort_Registration::algos() {
 	    {"Selection", Selection::sort},
 	    {"Insertion", Insertion::sort}, 
 	    {"Insertion2", Insertion::sort2}, 
-	    {"Shell", Shell::sort}};
+	    {"Shell", Shell::sort},
+	    {"Shell2", Shell::sort2}};
     return sort_algorithms;
 }
 
@@ -58,21 +60,27 @@ Insertion::sort2(Comparable_Array &a) {
 
 void
 Shell::sort(Comparable_Array &a) {
-    int h = 1;
-    do {
-	int n = h * 3;
-	if (n < a.size())
-	    h = n;
-	else
-	    break;
-    } while(1);
+    int h = 1, N = a.size();
+    while (h < N / 3)
+	h = h * 3 + 1;
 
-    while (h > 0) {
-	for (int i = h; i < a.size(); i++) {
+    while (h >= 1) {
+	for (int i = h; i < N; i++)
 	    for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
 		std::swap(a[j], a[j - h]);
-	}
 	h /= 3;
+    }
+}
+
+void
+Shell::sort2(Comparable_Array &a) {
+    const std::vector<int> sequence = {1, 5, 19, 41, 109, 209, 505, 929, 2161, 3905, 8929, 16001, 36289, 64769, 146305, 260609};
+    int N = a.size();
+    for (int hi = sequence.size() - 1; hi >= 0; hi--) {
+	int h = sequence[hi];
+	for (int i = h; i < N; i++)
+	    for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
+		std::swap(a[j], a[j - h]);
     }
 }
 
