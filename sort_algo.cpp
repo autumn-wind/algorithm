@@ -9,126 +9,226 @@
 
 const Name_Sort_Function_Map&
 Sort_Registration::algos() {
-    static Name_Sort_Function_Map sort_algorithms {
-	    {"STL", STL::sort},
-	    {"Selection", Selection::sort},
-	    {"Insertion", Insertion::sort}, 
-	    {"Insertion2", Insertion::sort2}, 
-	    {"Shell", Shell::sort},
-	    {"Shell2", Shell::sort2}};
-    return sort_algorithms;
+	static Name_Sort_Function_Map sort_algorithms {
+		{"STL", STL::sort},
+
+		{"Selection", Selection::sort},
+
+		{"Insertion", Insertion::sort},
+		{"Insertion2", Insertion::sort2},
+
+		{"Shell", Shell::sort},
+		{"Shell2", Shell::sort2},
+		{"Shell3", Shell::sort3},
+
+		{"Merge", Merge::sort},
+		{"Merge2", Merge::sort2},
+		{"Merge3", Merge::sort3},
+	};
+	return sort_algorithms;
 }
 
 void STL::sort(Comparable_Array &a) {
-    std::sort(a.begin(), a.end());
+	std::sort(a.begin(), a.end());
 }
 
-void 
+void
 Selection::sort(Comparable_Array &a) {
-    for (int i = 0; i < a.size() - 1; i++) {
-	int min = i;
-	for (int j = i + 1; j < a.size(); j++) {
-	    if (a[j] < a[min])
-		min = j;
+	for (int i = 0; i < a.size() - 1; i++) {
+		int min = i;
+		for (int j = i + 1; j < a.size(); j++) {
+			if (a[j] < a[min])
+				min = j;
+		}
+		std::swap(a[min], a[i]);
 	}
-	std::swap(a[min], a[i]);
-    }
+}
+
+void
+Insertion::do_sort(Comparable_Array &a, int lo, int hi) {
+	for (int i = lo + 1; i <= hi; i++)
+		for (int j = i; j > lo && a[j] < a[j - 1]; j--)
+			std::swap(a[j], a[j - 1]); // every location, read & write twice
 }
 
 void
 Insertion::sort(Comparable_Array &a) {
-    for (int i = 1; i < a.size(); i++) {
-	for (int j = i; j > 0 && a[j] < a[j - 1]; j--) {
-	    std::swap(a[j], a[j - 1]); // every location, read & write twice
+	do_sort(a, 0, a.size() - 1);
+}
+
+void
+Insertion::do_sort2(Comparable_Array &a, int lo, int hi) {
+	for (int i = lo + 1; i <= hi; i++) {
+		int cur = i;
+		Comparable tmp = a[i];
+		while (cur > lo && tmp < a[cur - 1])
+			cur--;
+		for (int j = i; j > cur; j--)
+			a[j] = a[j - 1]; // every location, read & write once
+		a[cur] = tmp;
 	}
-    }
 }
 
 void
 Insertion::sort2(Comparable_Array &a) {
-    for (int i = 1; i < a.size(); i++) {
-	int cur = i;
-	Comparable tmp = a[i];
-	while (cur > 0 && tmp < a[cur - 1])
-	    cur--;
-
-	for (int j = i; j > cur; j--)
-	    a[j] = a[j - 1]; // every location, read & write once
-	a[cur] = tmp;
-    }
+	do_sort2(a, 0, a.size() - 1);
 }
 
 void
 Shell::sort(Comparable_Array &a) {
-    int h = 1, N = a.size();
-    while (h < N / 3)
-	h = h * 3 + 1;
+	int h = 1, N = a.size();
+	while (h < N / 3)
+		h = h * 3 + 1;
 
-    while (h >= 1) {
-	for (int i = h; i < N; i++)
-	    for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
-		std::swap(a[j], a[j - h]);
-	h /= 3;
-    }
+	while (h >= 1) {
+		for (int i = h; i < N; i++)
+			for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
+				std::swap(a[j], a[j - h]);
+		h /= 3;
+	}
 }
 
 void
 Shell::sort2(Comparable_Array &a) {
-    const std::vector<int> sequence = {1, 5, 19, 41, 109, 209, 505, 929, 2161, 3905, 8929, 16001, 36289, 64769, 146305, 260609};
-    int N = a.size();
-    for (int hi = sequence.size() - 1; hi >= 0; hi--) {
-	int h = sequence[hi];
-	for (int i = h; i < N; i++)
-	    for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
-		std::swap(a[j], a[j - h]);
-    }
+	const std::vector<int> sequence = {1, 4, 13, 40, 121, 364, 1093, 3280, 9841, 29524, 88573, 265720};
+	int N = a.size();
+	for (int hi = sequence.size() - 1; hi >= 0; hi--) {
+		int h = sequence[hi];
+		for (int i = h; i < N; i++)
+			for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
+				std::swap(a[j], a[j - h]);
+	}
+}
+
+void
+Shell::sort3(Comparable_Array &a) {
+	const std::vector<int> sequence = {1, 5, 19, 41, 109, 209, 505, 929, 2161, 3905, 8929, 16001, 36289, 64769, 146305, 260609};
+	int N = a.size();
+	for (int hi = sequence.size() - 1; hi >= 0; hi--) {
+		int h = sequence[hi];
+		for (int i = h; i < N; i++)
+			for (int j = i; j - h >= 0 && a[j] < a[j - h]; j -= h)
+				std::swap(a[j], a[j - h]);
+	}
+}
+
+void
+Merge::do_merge(Comparable_Array &a, Comparable_Array &aux, int lo, int mid, int hi) {
+	for (int k = lo; k <= hi; k++)
+		aux[k] = a[k];
+
+	int i = lo, j = mid + 1;
+	for (int k = lo; k <= hi; k++) {
+		if (i > mid)
+			a[k] = aux[j++];
+		else if (j > hi)
+			a[k] = aux[i++];
+		else if (aux[i] < aux[j])
+			a[k] = aux[i++];
+		else
+			a[k] = aux[j++];
+	}
+}
+
+void
+Merge::do_sort(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
+	if (lo >= hi)
+		return;
+
+	int mid = lo + (hi - lo) / 2;
+	do_sort(a, aux, lo, mid);
+	do_sort(a, aux, mid + 1, hi);
+	do_merge(a, aux, lo, mid, hi);
+}
+
+void
+Merge::sort(Comparable_Array &a) {
+	Comparable_Array aux(a.size(), 0);
+	do_sort(a, aux, 0, a.size() - 1);
+}
+
+void
+Merge::do_sort2(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
+	// use insertion sort for small array
+	if (hi - lo < 15)
+		return Insertion::do_sort(a, lo, hi);
+
+	int mid = lo + (hi - lo) / 2;
+	do_sort2(a, aux, lo, mid);
+	do_sort2(a, aux, mid + 1, hi);
+	do_merge(a, aux, lo, mid, hi);
+}
+
+void
+Merge::sort2(Comparable_Array &a) {
+	Comparable_Array aux(a.size(), 0);
+	do_sort2(a, aux, 0, a.size() - 1);
+}
+
+void
+Merge::do_sort3(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
+	if (lo >= hi)
+		return;
+
+	int mid = lo + (hi - lo) / 2;
+	do_sort3(a, aux, lo, mid);
+	do_sort3(a, aux, mid + 1, hi);
+	// avoid unnecessary merge
+	if (a[mid] > a[mid + 1])
+		do_merge(a, aux, lo, mid, hi);
+}
+
+void
+Merge::sort3(Comparable_Array &a) {
+	Comparable_Array aux(a.size(), 0);
+	do_sort3(a, aux, 0, a.size() - 1);
 }
 
 double
 Sort_Compare::sort_and_time(const Sort_Function &func, Comparable_Array &a) {
-    auto start = std::chrono::steady_clock::now();
-    func(a);
-    auto end = std::chrono::steady_clock::now();
-    std::chrono::duration<double> elapsed_seconds = end-start;
-    return elapsed_seconds.count();
+	auto start = std::chrono::steady_clock::now();
+	func(a);
+	auto end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> elapsed_seconds = end - start;
+	return elapsed_seconds.count();
 }
 
 double
 Sort_Compare::sort_and_time_random_input(const Sort_Function &func, int array_len, int loop_times) {
-    Comparable_Array a(array_len);
-    double total = 0.0;
+	Comparable_Array a(array_len);
+	double total = 0.0;
 
-    ::srandom(::time(NULL));
+	::srandom(::time(NULL));
 
-    for (int t = 0; t < loop_times; t++) {
-	for (int i = 0; i < array_len; i++)
-	    a[i] = ::random();
-	total += sort_and_time(func, a);
-    }
+	for (int t = 0; t < loop_times; t++) {
+		for (int i = 0; i < array_len; i++)
+			a[i] = ::random();
+		total += sort_and_time(func, a);
+	}
 
-    return total;
+	return total;
 }
 
 #define TEST_ARRAY_LENGTH 10
 void
 Sort_Compare::test_sort_algo(const std::string &alg, const Sort_Function &func) {
-    std::cout << "<<< Test " << alg << " sort algorithm >>>" << std::endl;
+	std::cout << "<<< Test " << alg << " sort algorithm >>>" << std::endl;
 
-    Comparable_Array a(TEST_ARRAY_LENGTH);
-    ::srandom(::time(NULL));
+	Comparable_Array a(TEST_ARRAY_LENGTH);
+	::srandom(::time(NULL));
 
-    std::cout << "Initial array:" << std::endl;
-    for (int i = 0; i < TEST_ARRAY_LENGTH; i++) {
-	a[i] = ::random() % 100;
-	std::cout << a[i] << ' ';
-    }
-    std::cout << std::endl;
+	std::cout << "Initial array:" << std::endl;
+	for (int i = 0; i < TEST_ARRAY_LENGTH; i++) {
+		a[i] = ::random() % 100;
+		std::cout << a[i] << ' ';
+	}
+	std::cout << std::endl;
 
-    func(a);
+	func(a);
 
-    std::cout << "Sorted array:" << std::endl;
-    for (auto &n : a)
-	std::cout << n << ' ';
-    std::cout << std::endl;
+	std::cout << "Sorted array:" << std::endl;
+	for (auto &n : a)
+		std::cout << n << ' ';
+	std::cout << std::endl;
 }
 #undef TEST_ARRAY_LENGTH

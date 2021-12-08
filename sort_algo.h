@@ -17,13 +17,26 @@ struct Selection {
 };
 
 struct Insertion {
-    static void sort(Comparable_Array&); 
-    static void sort2(Comparable_Array&); 
+	static void do_sort(Comparable_Array&, int, int);
+    static void sort(Comparable_Array&);
+	static void do_sort2(Comparable_Array&, int, int);
+    static void sort2(Comparable_Array&);
 };
 
 struct Shell {
     static void sort(Comparable_Array&);
     static void sort2(Comparable_Array&);
+    static void sort3(Comparable_Array&);
+};
+
+struct Merge {
+    static void do_merge(Comparable_Array&, Comparable_Array&, int, int, int);
+    static void do_sort(Comparable_Array&, Comparable_Array&, int, int);
+    static void sort(Comparable_Array&);
+    static void do_sort2(Comparable_Array&, Comparable_Array&, int, int);
+    static void sort2(Comparable_Array&);
+    static void do_sort3(Comparable_Array&, Comparable_Array&, int, int);
+    static void sort3(Comparable_Array&);
 };
 
 struct Sort_Compare {
@@ -33,5 +46,5 @@ struct Sort_Compare {
 };
 
 struct Sort_Registration {
-    static const Name_Sort_Function_Map& algos(); 
+    static const Name_Sort_Function_Map& algos();
 };
