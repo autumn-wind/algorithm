@@ -37,6 +37,10 @@ struct Merge {
     static void sort2(Comparable_Array&);
     static void do_sort3(Comparable_Array&, Comparable_Array&, int, int);
     static void sort3(Comparable_Array&);
+    static void do_merge4(Comparable_Array&, Comparable_Array&, int, int, int);
+    static void do_sort_aux_to_ori(Comparable_Array&, Comparable_Array&, int, int);
+    static void do_sort_ori_to_aux(Comparable_Array&, Comparable_Array&, int, int);
+    static void sort4(Comparable_Array&);
 };
 
 struct Sort_Compare {
