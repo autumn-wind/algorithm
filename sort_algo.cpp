@@ -2,6 +2,7 @@
 #include<algorithm>
 #include<iostream>
 #include<vector>
+#include<algorithm>
 
 #include<time.h>
 
@@ -25,6 +26,7 @@ Sort_Registration::algos() {
 		{"Merge2", Merge::sort2},
 		{"Merge3", Merge::sort3},
 		{"Merge4", Merge::sort4},
+		{"Merge5", Merge::sort5},
 	};
 	return sort_algorithms;
 }
@@ -200,6 +202,7 @@ Merge::do_merge4(Comparable_Array &a, Comparable_Array &aux, int lo, int mid, in
 	}
 }
 
+// directly sort array a into array aux
 void
 Merge::do_sort4(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
 	if (lo >= hi)
@@ -219,6 +222,16 @@ Merge::sort4(Comparable_Array &a) {
 	do_sort4(a, aux, lo, mid);
 	do_sort4(a, aux, mid + 1, hi);
 	do_merge4(a, aux, lo, mid, hi);
+}
+
+// merge sort from bottom to top
+void
+Merge::sort5(Comparable_Array &a) {
+	int N = a.size();
+	Comparable_Array aux(N, 0);
+	for (int sz = 1; sz < N; sz *= 2)
+		for (int lo = 0; lo + sz < N; lo += 2 * sz)
+			do_merge(a, aux, lo, lo + sz - 1, std::min(lo + 2 * sz - 1, N - 1));
 }
 
 double

@@ -33,13 +33,18 @@ struct Merge {
     static void do_merge(Comparable_Array&, Comparable_Array&, int, int, int);
     static void do_sort(Comparable_Array&, Comparable_Array&, int, int);
     static void sort(Comparable_Array&);
+
     static void do_sort2(Comparable_Array&, Comparable_Array&, int, int);
     static void sort2(Comparable_Array&);
+
     static void do_sort3(Comparable_Array&, Comparable_Array&, int, int);
     static void sort3(Comparable_Array&);
+
     static void do_merge4(Comparable_Array&, Comparable_Array&, int, int, int);
     static void do_sort4(Comparable_Array&, Comparable_Array&, int, int);
     static void sort4(Comparable_Array&);
+
+	static void sort5(Comparable_Array&);
 };
 
 struct Sort_Compare {
