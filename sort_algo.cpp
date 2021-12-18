@@ -201,25 +201,14 @@ Merge::do_merge4(Comparable_Array &a, Comparable_Array &aux, int lo, int mid, in
 }
 
 void
-Merge::do_sort_ori_to_aux(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
+Merge::do_sort4(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
 	if (lo >= hi)
 		return;
 
 	int mid = lo + (hi - lo) / 2;
-	do_sort_aux_to_ori(a, aux, lo, mid);
-	do_sort_aux_to_ori(a, aux, mid + 1, hi);
+	do_sort4(aux, a, lo, mid);
+	do_sort4(aux, a, mid + 1, hi);
 	do_merge4(aux, a, lo, mid, hi);
-}
-
-void
-Merge::do_sort_aux_to_ori(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
-	if (lo >= hi)
-		return;
-
-	int mid = lo + (hi - lo) / 2;
-	do_sort_ori_to_aux(a, aux, lo, mid);
-	do_sort_ori_to_aux(a, aux, mid + 1, hi);
-	do_merge4(a, aux, lo, mid, hi);
 }
 
 void
@@ -227,8 +216,8 @@ Merge::sort4(Comparable_Array &a) {
 	Comparable_Array aux(a.begin(), a.end());
 	int lo = 0, hi = a.size() - 1;
 	int mid = lo + (hi - lo) / 2;
-	do_sort_ori_to_aux(a, aux, lo, mid);
-	do_sort_ori_to_aux(a, aux, mid + 1, hi);
+	do_sort4(a, aux, lo, mid);
+	do_sort4(a, aux, mid + 1, hi);
 	do_merge4(a, aux, lo, mid, hi);
 }
 
