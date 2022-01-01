@@ -27,6 +27,8 @@ Sort_Registration::algos() {
 		{"Merge3", Merge::sort3},
 		{"Merge4", Merge::sort4},
 		{"Merge5", Merge::sort5},
+
+		{"Quick", Quick::sort},
 	};
 	return sort_algorithms;
 }
@@ -214,6 +216,7 @@ Merge::do_sort4(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
 	do_merge4(aux, a, lo, mid, hi);
 }
 
+// merge without copying
 void
 Merge::sort4(Comparable_Array &a) {
 	Comparable_Array aux(a.begin(), a.end());
@@ -232,6 +235,35 @@ Merge::sort5(Comparable_Array &a) {
 	for (int sz = 1; sz < N; sz *= 2)
 		for (int lo = 0; lo + sz < N; lo += 2 * sz)
 			do_merge(a, aux, lo, lo + sz - 1, std::min(lo + 2 * sz - 1, N - 1));
+}
+
+int
+Quick::partition(Comparable_Array &a, int lo, int hi) {
+	int i = lo, j = hi + 1;
+	Comparable v = a[lo];
+	while (true) {
+		while (a[++i] < v) if (i == hi) break;
+		while (a[--j] > v) /*if (j == lo) break*/;
+		if (i >= j) break;
+		std::swap(a[i], a[j]);
+	}
+	std::swap(a[lo], a[j]);
+	return j;
+}
+
+void
+Quick::do_sort(Comparable_Array &a, int lo, int hi) {
+	if (lo >= hi)
+		return;
+	int j = partition(a, lo, hi);
+	do_sort(a, lo, j - 1);
+	do_sort(a, j + 1, hi);
+}
+
+void
+Quick::sort(Comparable_Array &a) {
+	std::random_shuffle(a.begin(), a.end());
+	do_sort(a, 0, a.size() - 1);
 }
 
 double

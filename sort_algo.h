@@ -47,6 +47,12 @@ struct Merge {
 	static void sort5(Comparable_Array&);
 };
 
+struct Quick {
+    static int partition(Comparable_Array&, int, int);
+    static void do_sort(Comparable_Array&, int, int);
+    static void sort(Comparable_Array&);
+};
+
 struct Sort_Compare {
     static double sort_and_time(const Sort_Function&, Comparable_Array&);
     static double sort_and_time_random_input(const Sort_Function&, int, int);
