@@ -15,20 +15,20 @@ Sort_Registration::algos() {
 		{"Selection", Selection::sort},
 
 		{"Insertion", Insertion::sort},
-		{"Insertion2", Insertion::sort2},
+		{"Insertion_rw_once", Insertion::sort_rw_once},
 
 		{"Shell", Shell::sort},
-		{"Shell2", Shell::sort2},
-		{"Shell3", Shell::sort3},
+		{"Shell_by_static_steps", Shell::sort_by_static_steps},
+		{"Shell_by_adv_static_steps", Shell::sort_by_adv_static_steps},
 
 		{"Merge", Merge::sort},
-		{"Merge2", Merge::sort2},
-		{"Merge3", Merge::sort3},
-		{"Merge4", Merge::sort4},
-		{"Merge5", Merge::sort5},
+		{"Merge_using_insertion_sort", Merge::sort_using_insertion_sort},
+		{"Merge_pruning_merge", Merge::sort_pruning_merge},
+		{"Merge_without_copy", Merge::sort_without_copy},
+		{"Merge_from_bottom_to_top", Merge::sort_from_bottom_to_top},
 
 		{"Quick", Quick::sort},
-		{"Quick2", Quick::sort2},
+		{"Quick_3_way", Quick::sort_3_way},
 	};
 	return sort_algorithms;
 }
@@ -62,7 +62,7 @@ Insertion::sort(Comparable_Array &a) {
 }
 
 void
-Insertion::do_sort2(Comparable_Array &a, int lo, int hi) {
+Insertion::do_sort_rw_once(Comparable_Array &a, int lo, int hi) {
 	for (int i = lo + 1; i <= hi; i++) {
 		int cur = i;
 		Comparable tmp = a[i];
@@ -75,8 +75,8 @@ Insertion::do_sort2(Comparable_Array &a, int lo, int hi) {
 }
 
 void
-Insertion::sort2(Comparable_Array &a) {
-	do_sort2(a, 0, a.size() - 1);
+Insertion::sort_rw_once(Comparable_Array &a) {
+	do_sort_rw_once(a, 0, a.size() - 1);
 }
 
 void
@@ -94,7 +94,7 @@ Shell::sort(Comparable_Array &a) {
 }
 
 void
-Shell::sort2(Comparable_Array &a) {
+Shell::sort_by_static_steps(Comparable_Array &a) {
 	const std::vector<int> sequence = {1, 4, 13, 40, 121, 364, 1093, 3280, 9841, 29524, 88573, 265720};
 	int N = a.size();
 	for (int hi = sequence.size() - 1; hi >= 0; hi--) {
@@ -106,7 +106,7 @@ Shell::sort2(Comparable_Array &a) {
 }
 
 void
-Shell::sort3(Comparable_Array &a) {
+Shell::sort_by_adv_static_steps(Comparable_Array &a) {
 	const std::vector<int> sequence = {1, 5, 19, 41, 109, 209, 505, 929, 2161, 3905, 8929, 16001, 36289, 64769, 146305, 260609};
 	int N = a.size();
 	for (int hi = sequence.size() - 1; hi >= 0; hi--) {
@@ -153,44 +153,44 @@ Merge::sort(Comparable_Array &a) {
 }
 
 void
-Merge::do_sort2(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
+Merge::do_sort_using_insertion_sort(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
 	// use insertion sort for small array
 	if (hi - lo < 15)
 		return Insertion::do_sort(a, lo, hi);
 
 	int mid = lo + (hi - lo) / 2;
-	do_sort2(a, aux, lo, mid);
-	do_sort2(a, aux, mid + 1, hi);
+	do_sort_using_insertion_sort(a, aux, lo, mid);
+	do_sort_using_insertion_sort(a, aux, mid + 1, hi);
 	do_merge(a, aux, lo, mid, hi);
 }
 
 void
-Merge::sort2(Comparable_Array &a) {
+Merge::sort_using_insertion_sort(Comparable_Array &a) {
 	Comparable_Array aux(a.size(), 0);
-	do_sort2(a, aux, 0, a.size() - 1);
+	do_sort_using_insertion_sort(a, aux, 0, a.size() - 1);
 }
 
 void
-Merge::do_sort3(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
+Merge::do_sort_pruning_merge(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
 	if (lo >= hi)
 		return;
 
 	int mid = lo + (hi - lo) / 2;
-	do_sort3(a, aux, lo, mid);
-	do_sort3(a, aux, mid + 1, hi);
+	do_sort_pruning_merge(a, aux, lo, mid);
+	do_sort_pruning_merge(a, aux, mid + 1, hi);
 	// avoid unnecessary merge
 	if (a[mid] > a[mid + 1])
 		do_merge(a, aux, lo, mid, hi);
 }
 
 void
-Merge::sort3(Comparable_Array &a) {
+Merge::sort_pruning_merge(Comparable_Array &a) {
 	Comparable_Array aux(a.size(), 0);
-	do_sort3(a, aux, 0, a.size() - 1);
+	do_sort_pruning_merge(a, aux, 0, a.size() - 1);
 }
 
 void
-Merge::do_merge4(Comparable_Array &a, Comparable_Array &aux, int lo, int mid, int hi) {
+Merge::do_merge_without_copy(Comparable_Array &a, Comparable_Array &aux, int lo, int mid, int hi) {
 	int i = lo, j = mid + 1;
 	for (int k = lo; k <= hi; k++) {
 		if (i > mid)
@@ -206,30 +206,30 @@ Merge::do_merge4(Comparable_Array &a, Comparable_Array &aux, int lo, int mid, in
 
 // directly sort array a into array aux
 void
-Merge::do_sort4(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
+Merge::do_sort_without_copy(Comparable_Array &a, Comparable_Array &aux, int lo, int hi) {
 	if (lo >= hi)
 		return;
 
 	int mid = lo + (hi - lo) / 2;
-	do_sort4(aux, a, lo, mid);
-	do_sort4(aux, a, mid + 1, hi);
-	do_merge4(aux, a, lo, mid, hi);
+	do_sort_without_copy(aux, a, lo, mid);
+	do_sort_without_copy(aux, a, mid + 1, hi);
+	do_merge_without_copy(aux, a, lo, mid, hi);
 }
 
 // merge without copying
 void
-Merge::sort4(Comparable_Array &a) {
+Merge::sort_without_copy(Comparable_Array &a) {
 	Comparable_Array aux(a.begin(), a.end());
 	int lo = 0, hi = a.size() - 1;
 	int mid = lo + (hi - lo) / 2;
-	do_sort4(a, aux, lo, mid);
-	do_sort4(a, aux, mid + 1, hi);
-	do_merge4(a, aux, lo, mid, hi);
+	do_sort_without_copy(a, aux, lo, mid);
+	do_sort_without_copy(a, aux, mid + 1, hi);
+	do_merge_without_copy(a, aux, lo, mid, hi);
 }
 
 // merge sort from bottom to top
 void
-Merge::sort5(Comparable_Array &a) {
+Merge::sort_from_bottom_to_top(Comparable_Array &a) {
 	int N = a.size();
 	Comparable_Array aux(N, 0);
 	for (int sz = 1; sz < N; sz *= 2)
@@ -266,8 +266,9 @@ Quick::sort(Comparable_Array &a) {
 	do_sort(a, 0, a.size() - 1);
 }
 
+// quick-3-way
 void
-Quick::do_sort2(Comparable_Array &a, int lo, int hi) {
+Quick::do_sort_3_way(Comparable_Array &a, int lo, int hi) {
 	if (lo >= hi)
 		return;
 	Comparable v = a[lo];
@@ -280,14 +281,14 @@ Quick::do_sort2(Comparable_Array &a, int lo, int hi) {
 		else
 			i++;
 	}
-	do_sort2(a, lo, lt - 1);
-	do_sort2(a, gt + 1, hi);
+	do_sort_3_way(a, lo, lt - 1);
+	do_sort_3_way(a, gt + 1, hi);
 }
 
 void
-Quick::sort2(Comparable_Array &a) {
+Quick::sort_3_way(Comparable_Array &a) {
 	std::random_shuffle(a.begin(), a.end());
-	do_sort2(a, 0, a.size() - 1);
+	do_sort_3_way(a, 0, a.size() - 1);
 }
 
 double

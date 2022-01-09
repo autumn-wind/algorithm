@@ -22,14 +22,17 @@ struct Selection {
 struct Insertion {
 	static void do_sort(Comparable_Array&, int, int);
     static void sort(Comparable_Array&);
-	static void do_sort2(Comparable_Array&, int, int);
-    static void sort2(Comparable_Array&);
+
+	static void do_sort_rw_once(Comparable_Array&, int, int);
+    static void sort_rw_once(Comparable_Array&);
 };
 
 struct Shell {
     static void sort(Comparable_Array&);
-    static void sort2(Comparable_Array&);
-    static void sort3(Comparable_Array&);
+
+    static void sort_by_static_steps(Comparable_Array&);
+
+    static void sort_by_adv_static_steps(Comparable_Array&);
 };
 
 struct Merge {
@@ -37,17 +40,17 @@ struct Merge {
     static void do_sort(Comparable_Array&, Comparable_Array&, int, int);
     static void sort(Comparable_Array&);
 
-    static void do_sort2(Comparable_Array&, Comparable_Array&, int, int);
-    static void sort2(Comparable_Array&);
+    static void do_sort_using_insertion_sort(Comparable_Array&, Comparable_Array&, int, int);
+    static void sort_using_insertion_sort(Comparable_Array&);
 
-    static void do_sort3(Comparable_Array&, Comparable_Array&, int, int);
-    static void sort3(Comparable_Array&);
+    static void do_sort_pruning_merge(Comparable_Array&, Comparable_Array&, int, int);
+    static void sort_pruning_merge(Comparable_Array&);
 
-    static void do_merge4(Comparable_Array&, Comparable_Array&, int, int, int);
-    static void do_sort4(Comparable_Array&, Comparable_Array&, int, int);
-    static void sort4(Comparable_Array&);
+    static void do_merge_without_copy(Comparable_Array&, Comparable_Array&, int, int, int);
+    static void do_sort_without_copy(Comparable_Array&, Comparable_Array&, int, int);
+    static void sort_without_copy(Comparable_Array&);
 
-	static void sort5(Comparable_Array&);
+	static void sort_from_bottom_to_top(Comparable_Array&);
 };
 
 struct Quick {
@@ -55,8 +58,8 @@ struct Quick {
     static void do_sort(Comparable_Array&, int, int);
     static void sort(Comparable_Array&);
 
-    static void do_sort2(Comparable_Array&, int, int);
-    static void sort2(Comparable_Array&);
+    static void do_sort_3_way(Comparable_Array&, int, int);
+    static void sort_3_way(Comparable_Array&);
 };
 
 struct Sort_Compare {
