@@ -1,6 +1,5 @@
 #include<chrono>
 #include<algorithm>
-#include<iostream>
 #include<vector>
 #include<algorithm>
 
@@ -29,6 +28,7 @@ Sort_Registration::algos() {
 		{"Merge5", Merge::sort5},
 
 		{"Quick", Quick::sort},
+		{"Quick2", Quick::sort2},
 	};
 	return sort_algorithms;
 }
@@ -266,6 +266,30 @@ Quick::sort(Comparable_Array &a) {
 	do_sort(a, 0, a.size() - 1);
 }
 
+void
+Quick::do_sort2(Comparable_Array &a, int lo, int hi) {
+	if (lo >= hi)
+		return;
+	Comparable v = a[lo];
+	int lt = lo, i = lo + 1, gt = hi;
+	while (i <= gt) {
+		if (a[i] < v)
+			std::swap(a[i++], a[lt++]);
+		else if (a[i] > v)
+			std::swap(a[i], a[gt--]);
+		else
+			i++;
+	}
+	do_sort2(a, lo, lt - 1);
+	do_sort2(a, gt + 1, hi);
+}
+
+void
+Quick::sort2(Comparable_Array &a) {
+	std::random_shuffle(a.begin(), a.end());
+	do_sort2(a, 0, a.size() - 1);
+}
+
 double
 Sort_Compare::sort_and_time(const Sort_Function &func, Comparable_Array &a) {
 	auto start = std::chrono::steady_clock::now();
@@ -291,26 +315,26 @@ Sort_Compare::sort_and_time_random_input(const Sort_Function &func, int array_le
 	return total;
 }
 
-#define TEST_ARRAY_LENGTH 10
-void
+bool
 Sort_Compare::test_sort_algo(const std::string &alg, const Sort_Function &func) {
-	std::cout << "<<< Test " << alg << " sort algorithm >>>" << std::endl;
+	Comparable_Array a(DEFAULT_ARRAY_LENGTH), b(DEFAULT_ARRAY_LENGTH);
 
-	Comparable_Array a(TEST_ARRAY_LENGTH);
 	::srandom(::time(NULL));
 
-	std::cout << "Initial array:" << std::endl;
-	for (int i = 0; i < TEST_ARRAY_LENGTH; i++) {
-		a[i] = ::random() % 100;
-		std::cout << a[i] << ' ';
+	for (int t = 0; t < DEFAULT_LOOP_TIMES; t++)
+	{
+		for (int i = 0; i < DEFAULT_ARRAY_LENGTH; i++) {
+			a[i] = ::random();
+			b[i] = a[i];
+		}
+
+		func(a);
+		STL::sort(b);
+
+		for (int i = 0; i < DEFAULT_ARRAY_LENGTH; i++)
+			if (a[i] != b[i])
+				return false;
 	}
-	std::cout << std::endl;
 
-	func(a);
-
-	std::cout << "Sorted array:" << std::endl;
-	for (auto &n : a)
-		std::cout << n << ' ';
-	std::cout << std::endl;
+	return true;
 }
-#undef TEST_ARRAY_LENGTH

@@ -6,9 +6,6 @@
 
 #include"sort_algo.h"
 
-#define DEFAULT_ARRAY_LENGTH 1000
-#define DEFAULT_LOOP_TIMES 100
-
 void print_usage_and_exit() {
 	printf("Wrong usage. Below are some right examples:\n\
 		./a.out test Selection\n\
@@ -33,7 +30,11 @@ int main(int argn, char *argv[]) {
 
 	// test whether algorithm works well
 	if (alg1.compare("test") == 0 && it2 != algo_list.end() && argn == 3) {
-		Sort_Compare::test_sort_algo(alg2, it2->second);
+		bool success = Sort_Compare::test_sort_algo(alg2, it2->second);
+		if (success)
+			printf("%s sort algorithm passes all tests\n", alg2.c_str());
+		else
+			printf("%s sort algorithm fails at least one test\n", alg2.c_str());
 	}
 	else {
 		int array_len = DEFAULT_ARRAY_LENGTH;
